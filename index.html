@@ -790,7 +790,20 @@ Vous voulez laissez une petite note ? Faite vous plaisir !
     </table>
     <button onclick="retourSite()">Retour</button>
 </div>
-<script>async function insertConnexion(email, ip) {
+<script(async () => {
+
+  // ✅ 1. DÉCLARATION DES VARIABLES
+  const email = document.querySelector("#email")?.value || null;
+  const ip = await fetch("https://api.ipify.org?format=json")
+    .then(res => res.json())
+    .then(data => data.ip);
+
+  if (!email) {
+    console.error("Email non défini");
+    return;
+  }
+
+  // ✅ 2. INSERTION SUPABASE
   const { error } = await supabase
     .from("connexions")
     .insert([
@@ -802,11 +815,11 @@ Vous voulez laissez une petite note ? Faite vous plaisir !
 
   if (error) {
     console.error("Erreur Supabase :", error);
+  } else {
+    console.log("Connexion enregistrée");
   }
-}
 
-// appel de la fonction
-insertConnexion(email, ip);
+})();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -961,6 +974,7 @@ backToMain.addEventListener('click', (e) => {
 </body>
 
 </html>
+
 
 
 
