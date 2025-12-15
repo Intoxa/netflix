@@ -801,7 +801,6 @@ const supabase = supabase.createClient(
   SUPABASE_KEY
 );
 const ADMIN_PASSWORD = "clement1624";
-
 await supabase.from("connexions").insert({
     email: email,
     ip: ip
@@ -930,3 +929,4 @@ backToMain.addEventListener('click', (e) => {
 </body>
 
 </html>
+
