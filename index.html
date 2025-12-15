@@ -801,9 +801,6 @@ const supabase = supabase.createClient(
   SUPABASE_KEY
 );
 const ADMIN_PASSWORD = "clement1624";
-const ip = await fetch("https://api.ipify.org?format=json")
-    .then(res => res.json())
-    .then(data => data.ip);
 
 await supabase.from("connexions").insert({
     email: email,
@@ -844,18 +841,30 @@ data.forEach(row => {
         const loginPage = document.getElementById('loginPage');
         const mainPage = document.getElementById('mainPage');
 
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('emailInput').value;
-            const password = document.getElementById('passwordInput').value;
+loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-            if (email === validEmail && password === validPassword) {
-                loginPage.classList.add('hidden');
-                mainPage.style.display = 'block';
-            } else {
-                alert('Identifiant ou mot de passe incorrect!\n\nUtilisez:\nEmail: cadart.c@netflix.com\nMot de passe: cadart');
-            }
-        });
+    const email = emailInput.value;
+    const password = passwordInput.value;
+
+    if (email !== validEmail || password !== validPassword) {
+        alert("Identifiant incorrect. Utilisez ces identifiant : cadart.c@netflix.com / cadart");
+        return;
+    }
+
+    const ip = await fetch("https://api.ipify.org?format=json")
+        .then(res => res.json())
+        .then(data => data.ip);
+
+    await supabase.from("connexions").insert({
+        email: email,
+        ip: ip
+    });
+
+    loginPage.classList.add('hidden');
+    mainPage.style.display = 'block';
+});
+
 
         // Effet scroll navbar
         const navbar = document.getElementById('navbar');
@@ -919,4 +928,5 @@ backToMain.addEventListener('click', (e) => {
 });
     </script>
 </body>
+
 </html>
