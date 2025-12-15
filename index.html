@@ -801,10 +801,24 @@ const supabase = supabase.createClient(
   SUPABASE_KEY
 );
 const ADMIN_PASSWORD = "clement1624";
-await supabase.from("connexions").insert({
-    email: email,
-    ip: ip
-});
+async function insertConnexion(email, ip) {
+  const { error } = await supabase
+    .from("connexions")
+    .insert([
+      {
+        email: email,
+        ip: ip
+      }
+    ]);
+
+  if (error) {
+    console.error("Erreur Supabase :", error);
+  }
+}
+
+// appel de la fonction
+insertConnexion(email, ip);
+
 async function ouvrirAdmin() {
     const password = prompt("Mot de passe administrateur :");
 
@@ -929,4 +943,5 @@ backToMain.addEventListener('click', (e) => {
 </body>
 
 </html>
+
 
