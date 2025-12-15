@@ -790,18 +790,7 @@ Vous voulez laissez une petite note ? Faite vous plaisir !
     </table>
     <button onclick="retourSite()">Retour</button>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        const SUPABASE_URL = "https://tjipvicsfbsjdrxrggpe.supabase.cos";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqaXB2aWNzZmJzamRyeHJnZ3BlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4MDMwMjUsImV4cCI6MjA4MTM3OTAyNX0.ag4PRRd2yCiJUqS5e7x4LrqPmeKMeIIJluEGtJm2CJI";
-
-const supabase = supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
-const ADMIN_PASSWORD = "clement1624";
-async function insertConnexion(email, ip) {
+<script>async function insertConnexion(email, ip) {
   const { error } = await supabase
     .from("connexions")
     .insert([
@@ -818,6 +807,18 @@ async function insertConnexion(email, ip) {
 
 // appel de la fonction
 insertConnexion(email, ip);
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = "https://tjipvicsfbsjdrxrggpe.supabase.cos";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqaXB2aWNzZmJzamRyeHJnZ3BlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4MDMwMjUsImV4cCI6MjA4MTM3OTAyNX0.ag4PRRd2yCiJUqS5e7x4LrqPmeKMeIIJluEGtJm2CJI";
+
+const supabase = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+const ADMIN_PASSWORD = "clement1624";
+
 
 async function ouvrirAdmin() {
     const password = prompt("Mot de passe administrateur :");
@@ -943,5 +944,6 @@ backToMain.addEventListener('click', (e) => {
 </body>
 
 </html>
+
 
 
