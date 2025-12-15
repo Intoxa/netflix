@@ -823,6 +823,10 @@ Vous voulez laissez une petite note ? Faite vous plaisir !
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+        const supabase = createClient(URL, KEY);
+
+supabase.from("connexions").insert(...);
+
         const SUPABASE_URL = "https://tjipvicsfbsjdrxrggpe.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqaXB2aWNzZmJzamRyeHJnZ3BlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4MDMwMjUsImV4cCI6MjA4MTM3OTAyNX0.ag4PRRd2yCiJUqS5e7x4LrqPmeKMeIIJluEGtJm2CJI";
 
@@ -974,6 +978,7 @@ backToMain.addEventListener('click', (e) => {
 </body>
 
 </html>
+
 
 
 
