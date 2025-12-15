@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #141414;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* PAGE DE LOGIN */
+        .login-page {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1574267432644-f610f5e4239b?w=1920&h=1080&fit=crop');
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .login-header {
+            padding: 20px 50px;
+        }
+
+        .logo {
+            color: #e50914;
+            font-size: 2.5rem;
+            font-weight: bold;
+            letter-spacing: -2px;
+        }
+
+        .login-container {
+            max-width: 450px;
+            margin: auto;
+            background: rgba(0,0,0,0.75);
+            padding: 60px 68px 40px;
+            border-radius: 4px;
+        }
+
+        .login-container h1 {
+            margin-bottom: 28px;
+            font-size: 2rem;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 16px 20px;
+            background: #333;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            background: #454545;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: #e50914;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 24px;
+        }
+
+        .login-btn:hover {
+            background: #f40612;
+        }
+
+        .login-help {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            font-size: 13px;
+            color: #b3b3b3;
+        }
+
+        .login-info {
+            margin-top: 80px;
+            color: #737373;
+            font-size: 13px;
+        }
+
+        /* PAGE PRINCIPALE */
+        .main-page {
+            display: none;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(180deg, rgba(0,0,0,0.7) 10%, transparent);
+            z-index: 100;
+            transition: background 0.3s;
+        }
+
+        .navbar.scrolled {
+            background: #141414;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #e5e5e5;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #b3b3b3;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-icon, .bell-icon {
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+        }
+
+        .profile {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            background: #e50914;
+            cursor: pointer;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(20,20,20,1)), 
+                        url('https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=1920&h=1080&fit=crop');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 50px;
+        }
+
+        .hero-content {
+            max-width: 500px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.5;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+
+        .btn-play {
+            background: white;
+            color: black;
+        }
+
+        .btn-play:hover {
+            background: rgba(255,255,255,0.75);
+        }
+
+        .btn-info {
+            background: rgba(109,109,110,0.7);
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: rgba(109,109,110,0.4);
+        }
+
+        /* SECTIONS DE FILMS */
+        .movie-section {
+            padding: 0 50px;
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .movie-row {
+            display: flex;
+            gap: 5px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding: 10px 0;
+        }
+
+        .movie-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .movie-card {
+            min-width: 250px;
+            height: 140px;
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s;
+            position: relative;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+
+        .movie-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .movie-card.featured {
+            box-shadow: 0 0 30px 8px rgba(255, 215, 0, 0.8);
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 0 30px 8px rgba(255, 215, 0, 0.8);
+            }
+            50% {
+                box-shadow: 0 0 40px 12px rgba(255, 215, 0, 1);
+            }
+        }
+
+        .large-movie-card {
+            min-width: 350px;
+            height: 200px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* MODALE RÉSUMÉ */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #141414;
+            max-width: 800px;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            position: relative;
+            height: 400px;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(20,20,20,1)), 
+                        url('https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=800&h=400&fit=crop');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: flex-end;
+            padding: 40px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            background: rgba(0,0,0,0.9);
+        }
+
+        .modal-title {
+            font-size: 3rem;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .modal-body {
+            padding: 40px;
+        }
+
+        .modal-body h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #FFD700;
+        }
+
+        .modal-body p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #e5e5e5;
+        }
+
+        /* ÉPISODES */
+        .episodes-list {
+            margin-top: 30px;
+        }
+
+        .episode {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            transition: background 0.3s;
+        }
+
+        .episode:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .episode-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #FFD700;
+            min-width: 50px;
+        }
+
+        .episode-content h4 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: white;
+        }
+
+        .episode-content p {
+            font-size: 0.95rem;
+            color: #b3b3b3;
+            margin: 0;
+        }
+
+        /* SCROLL BUTTONS */
+        .scroll-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            border: none;
+            color: white;
+            padding: 20px 10px;
+            cursor: pointer;
+            z-index: 50;
+            transition: background 0.3s;
+        }
+
+        .scroll-btn:hover {
+            background: rgba(0,0,0,0.8);
+        }
+
+        .scroll-left {
+            left: 0;
+        }
+
+        .scroll-right {
+            right: 0;
+        }
+/* Style pour le lien Crédits dans la navbar */
+.nav-credits-link {
+    font-weight: bold; /* Met le texte en gras */
+    color: #4CAF50;    /* Couleur verte */
+}
+
+/* Style pour la page des crédits */
+.credits-page {
+    display: none; /* Cachée par défaut */
+    background-color: #141414;
+    min-height: 100vh;
+    padding: 0 50px;
+    color: rgb(30, 255, 0);
+}
+
+.credits-header {
+    padding: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #333;
+}
+
+.back-link {
+    color: #e5e5e5;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+.back-link:hover {
+    color: #b3b3b3;
+}
+
+.credits-container {
+    max-width: 800px;
+    margin: 40px auto;
+}
+
+.credits-container h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.credits-container textarea {
+    width: 100%;
+    padding: 15px;
+    background: #333;
+    border: 1px solid #555;
+    border-radius: 4px;
+    color: white;
+    font-size: 16px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    resize: vertical;
+}
+
+.save-credits-btn {
+    padding: 12px 25px;
+    background: #e50914;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.save-credits-btn:hover {
+    background: #f40612;
+}
+    </style>
+</head>
+<body>
+    <!-- PAGE DE LOGIN -->
+    <div class="login-page" id="loginPage">
+        <div class="login-header">
+            <div class="logo">NETFLIX</div>
+        </div>
+        <div class="login-container">
+            <h1>S'identifier</h1>
+            <form id="loginForm">
+                <div class="input-group">
+                    <input type="email" id="emailInput" placeholder="E-mail ou numéro de téléphone" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="passwordInput" placeholder="Mot de passe" required>
+                </div>
+                <button type="submit" class="login-btn">S'identifier</button>
+                <div class="login-help">
+                    <label><input type="checkbox"> Se souvenir de moi</label>
+                    <a href="#" style="color: #b3b3b3; text-decoration: none;">Besoin d'aide ?</a>
+                </div>
+            </form>
+            <div class="login-info">
+                <p>Première visite sur Netflix ? <a href="#" style="color: white;">Inscrivez-vous</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE PRINCIPALE -->
+    <div class="main-page" id="mainPage">
+        <!-- NAVBAR -->
+        <nav class="navbar" id="navbar">
+            <div class="nav-left">
+                <div class="logo">NETFLIX</div>
+                <ul class="nav-links">
+                    <li><a href="#">Accueil</a></li>
+                    <li><a href="#">Séries</a></li>
+                    <li><a href="#">Films</a></li>
+                    <li><a href="#">Nouveautés</a></li>
+                    <li><a href="#">Ma liste</a></li>
+                    <li><a href="#" id="creditsLink" class="nav-credits-link">Crédits</a></li>
+                    <a href="#" onclick="ouvrirAdmin()">Secret (pour le dev)</a>
+
+                </ul>
+            </div>
+            <div class="nav-right">
+                <svg class="search-icon" fill="white" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <svg class="bell-icon" fill="white" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+                <div class="profile"></div>
+            </div>
+        </nav>
+
+        <!-- HERO SECTION -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">Le Cadeau de la Grenouille</h1>
+                <p class="hero-description">un paysan promet à un serpent de lui donner une de ses filles en mariage s’il épargne la grenouille qu’il s’apprête à engloutir. Comment la benjamine des 3 filles va-t-elle faire face à cette promesse ?</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-play">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                        Lecture
+                    </button>
+                    <button class="btn btn-info" id="moreInfoBtn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        Plus d'infos
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTIONS DE FILMS -->
+        <div class="movie-section">
+            <h2 class="section-title">Tendances actuelles</h2>
+            <div class="movie-row">
+                <div class="movie-card large-movie-card">
+                    <img src="https://images.unsplash.com/photo-1574267432644-f610f5e4239b?w=400&h=250&fit=crop" alt="Film 1">
+                </div>
+                <div class="movie-card large-movie-card">
+                    <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400&h=250&fit=crop" alt="Film 2">
+                </div>
+                <div class="movie-card large-movie-card featured">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=250&fit=crop" alt="Arsène Lupin">
+                    <div style="position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.8); padding: 10px 15px; border-radius: 4px;">
+                        <h3 style="font-size: 1.5rem; margin: 0; color: #FFD700;">ARSÈNE LUPIN</h3>
+                        <p style="font-size: 0.9rem; margin: 5px 0 0 0; color: #e5e5e5;">Le gentleman cambrioleur</p>
+                    </div>
+                </div>
+                <div class="movie-card large-movie-card">
+                    <img src="https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=400&h=250&fit=crop" alt="Film 4">
+                </div>
+                <div class="movie-card large-movie-card">
+                    <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400&h=250&fit=crop" alt="Film 5">
+                </div>
+                <div class="movie-card large-movie-card">
+                    <img src="https://images.unsplash.com/photo-1594908900066-3f47337549d8?w=400&h=250&fit=crop" alt="Film 6">
+                </div>
+            </div>
+        </div>
+
+        <div class="movie-section">
+            <h2 class="section-title">Séries populaires</h2>
+            <div class="movie-row">
+                <div class="movie-card">
+                    <img src="https://images.unsplash.com/photo-1509281373149-e957c6296406?w=300&h=170&fit=crop" alt="Série 1">
+                </div>
+                <div class="movie-card">
+                    <img src="https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?w=300&h=170&fit=crop" alt="Série 2">
+                </div>
+                <div class="movie-card">
+                    <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=300&h=170&fit=crop" alt="Série 3">
+                </div>
+                <div class="movie-card">
+                    <img src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=300&h=170&fit=crop" alt="Série 4">
+                </div>
+                <div class="movie-card">
+                    <img src="https://images.unsplash.com/photo-1560169897-fc0cdbdfa4d5?w=300&h=170&fit=crop" alt="Série 5">
+                </div>
+                <div class="movie-card">
+                    <img src="https://images.unsplash.com/photo-1535016120720-40c646be5580?w=300&h=170&fit=crop" alt="Série 6">
+                </div>
+            </div>
+        </div>
+
+        <div class="movie-section">
+            <h2 class="section-title">Nouveautés</h2>
+            <div class="movie-row">
+                <div class="movie-card">
+                    <img src="https://images.unsplash.com/photo-1616530940355-351fabd9524b?w=300&h=170&fit=crop" alt="Nouveau 1">
+                </div>
+                <div class="movie-card">
+                    <img src="https://images.unsplash.com/photo-1543536448-d209d2d13a1c?w=300&h=170&fit=crop" alt="Nouveau 2">
+                </div>
+                <div class="movie-card">
+                    <img src="https://images.unsplash.com/photo-1568876694728-451bbf694b83?w=300&h=170&fit=crop" alt="Nouveau 3">
+                </div>
+                <div class="movie-card">
+                    <img src="https://images.unsplash.com/photo-1542204165-65bf26472b9b?w=300&h=170&fit=crop" alt="Nouveau 4">
+                </div>
+                <div class="movie-card">
+                    <img src="https://images.unsplash.com/photo-1585951237318-9ea5e175b891?w=300&h=170&fit=crop" alt="Nouveau 5">
+                </div>
+                <div class="movie-card">
+                    <img src="https://images.unsplash.com/photo-1524712245354-2c4e5e7121c0?w=300&h=170&fit=crop" alt="Nouveau 6">
+                </div>
+            </div>
+        </div>
+
+        <div class="movie-section">
+            <h2 class="section-title">Action et aventure</h2>
+            <div class="movie-row">
+                <div class="movie-card">
+                    <img src="https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=300&h=170&fit=crop" alt="Action 1">
+                </div>
+                <div class="movie-card">
+                    <img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?w=300&h=170&fit=crop" alt="Action 2">
+                </div>
+                <div class="movie-card">
+                    <img src="https://images.unsplash.com/photo-1585951237318-9ea5e175b891?w=300&h=170&fit=crop" alt="Action 3">
+                </div>
+                <div class="movie-card">
+                    <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=300&h=170&fit=crop" alt="Action 4">
+                </div>
+                <div class="movie-card">
+                    <img src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=300&h=170&fit=crop" alt="Action 5">
+                </div>
+                <div class="movie-card">
+                    <img src="https://images.unsplash.com/photo-1594908900066-3f47337549d8?w=300&h=170&fit=crop" alt="Action 6">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE RÉSUMÉ -->
+    <div class="modal" id="infoModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close-modal" id="closeModal">×</button>
+                <h1 class="modal-title">Le Cadeau de la Grenouille</h1>
+            </div>
+            <div class="modal-body">
+                <h3>🐸 Un conte japonais merveilleux</h3>
+                <p> un paysan promet à un serpent de lui donner une de ses filles en mariage s’il épargne la grenouille qu’il s’apprête à engloutir. Comment la benjamine des 3 filles va-t-elle faire face à cette promesse ?</p>
+                <h3>📺 Épisodes</h3>
+                <div class="episodes-list">
+                    <div class="episode">
+                        <div class="episode-number">1</div>
+                        <div class="episode-content">
+                            <h4>L'éxposition</h4>
+                            <p>Dans un petit village japonais, vivait un paysan pauvre mais travailleur avec ses trois filles. L'aînée était orgueilleuse et vaniteuse, la cadette était pragmatique et souvent mécontente, mais la benjamine, nommée Saki, était douce, courageuse et avait un profond respect pour la nature. Un jour, alors qu'il travaillait son champ, le paysan vit un énorme serpent qui s'apprêtait à dévorer une petite grenouille terrifiée. Pris de pitié pour la créature sans défense, le paysan s'écria : "Arrête, noble serpent ! Épargne cette vie et je te promets une récompense de grande valeur : la main d'une de mes filles en mariage !" Le serpent, voyant là une opportunité bien plus intéressante qu'un simple repas, relâcha la grenouille qui s'enfuit dans les roseaux et fixe le paysan d'un œil intelligent. Le pacte était scellé.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="episode">
+                        <div class="episode-number">2</div>
+                        <div class="episode-content">
+                            <h4>Le conflit</h4>
+                            <p>Ce soir-là, le paysan rentra chez le cœur lourd et raconta sa folle promesse. L'aînée se moqua de lui, refusant catégoriquement d'épouser un reptile. La cadette pleura et se plaignit de l'injustice de son sort. Devant le désespoir de son père et l'égoïsme de ses sœurs, Saki, la benjamine, s'avança. "Père, dit-elle doucement, une promesse est une promesse. Si c'est le prix à payer pour que vous teniez votre parole et pour que la vie de la grenouille ait été sauvée, alors j'accepte."</p>
+                            <p1>Le lendemain, Saki, vêtue de ses plus simples habitudes, suivit son père jusqu'à l'étang où le serpent l'attendait. Ses sœurs l'observaient de loin, se moquant de sa "sottise". Le serpent s'approche de Saki et, dans une voix sifflante mais claire, lui dit : "Tu es courageuse. Mais le chemin qui t'attend est périlleux. Viens."</p1>
+                        </div>
+                    </div>
+                    
+                    <div class="episode">
+                        <div class="episode-number">3</div>
+                        <div class="episode-content">
+                            <h4>L'epreuve</h4>
+                            <p>Le serpent l'emmena non pas dans un palais sombre, mais à travers la forêt jusqu'à une vieille maison en ruine, perchée au flanc d'une montagne. "C'est notre foyer", dit-il. "Mais avant que tu ne deviennes mon épouse, tu devras prouver la pureté de ton cœur. Pendant trois jours, tu devras nettoyer cette maison et la rendre digne de recevoir un hôte. Si tu y parviens, tu seras récompensée. Si tu échoues, tu resteras ici à jamais."
+
+Saki accepte. La première journée, elle travailla sans relâche, mais la poussière semblait revenir plus vite qu'elle ne la nettoyait, et les toiles d'araignée réapparaissaient instantanément. Épuisée, elle s'endormit sur le sol sale. Dans son sommeil, elle rêvait de la petite grenouille qu'elle avait sauvée efficacement. La grenouille lui parle : "N'abandonne pas, Saki. La bonté ne peut être vaincue par la saleté. Demain, utilise l'eau de la source pure qui coule derrière la maison."
+
+Le lendemain, Saki suivit le conseil. En utilisant l'eau cristalline de la source, elle découvre que la poussière et la crasse disparaissent comme par magie. La maison commença à briller de propreté. Le troisième jour, alors qu'elle polissait le dernier plancher, elle trouva une petite cloche en bronze sous une planche pourrie. Quand elle la contraction, un son doux et mélodieux remplit la maison.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="episode">
+                        <div class="episode-number">4</div>
+                        <div class="episode-content">
+                            <h4>Le dénoument</h4>
+                            <p>Au coucher du soleil du troisième jour, la maison était immaculée. Le serpent entre, sa silhouette se découpant dans la porte. Il regardait autour de lui, non pas avec satisfaction, mais avec une tristesse infinie. "Tu as réussi, Saki. Ton cœur est pur et ta volonté est forte."
+
+Il s'avança vers elle et, sous ses yeux ébahis, sa peau de serpent se mit à tomber en lambeaux, révélant non pas un homme, mais un prince magnifique, vêtu de soie et d'or. « Je suis le Prince des Eaux, maudit par une sorcière jalouse qui m'a condamné à prendre la forme d'une créature que les hommes craignent. La malédiction ne pouvait être brisée que par une promesse faite par pure bonté, tenue par un cœur désintéressé, et scellée par le son d'une cloche de pureté.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="episode">
+                        <div class="episode-number">5</div>
+                        <div class="episode-content">
+                            <h4>La Conclusion</h4>
+                            <p>Le prince des Eaux épousa Saki. Il lui offre un royaume de beauté et de prospérité, où l'eau était toujours pure et les récoltes toujours abondantes. Quant aux deux sœurs aînées, revenus à la raison, elles vécurent le reste de leurs jours en voyant la fortune de leur cadette, regrettant amèrement leur égoïsme. Et Saki apprit que le plus grand des cadeaux n'est pas celui que l'on reçoit, mais celui que l'on donne par le sacrifice et la bonté, et que parfois, la plus laide des apparences cache la plus noble des âmes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- PAGE DES CRÉDITS -->
+<div class="credits-page" id="creditsPage">
+    <div class="credits-header">
+        <div class="logo">NETFLIX</div>
+        <a href="#" id="backToMain" class="back-link">« Retour à l'accueil</a>
+    </div>
+    <div class="credits-container">
+        <h1>Crédits</h1>
+        <textarea id="creditsText" rows="20" cols="80">
+Ce site est une démonstration créée à des fins éducatives.
+Design par Téotim.
+Développement par Clément.
+Merci de votre visite !
+Vous voulez laissez une petite note ? Faite vous plaisir !
+        </textarea>
+        <br><br>
+        <button class="save-credits-btn">Enregistrer les modifications</button>
+    </div>
+</div>
+<div id="adminPage" style="display:none">
+    <h1>Page Admin</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>IP</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody id="adminTable"></tbody>
+    </table>
+    <button onclick="retourSite()">Retour</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = "https://tjipvicsfbsjdrxrggpe.supabase.cos";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqaXB2aWNzZmJzamRyeHJnZ3BlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU4MDMwMjUsImV4cCI6MjA4MTM3OTAyNX0.ag4PRRd2yCiJUqS5e7x4LrqPmeKMeIIJluEGtJm2CJI";
+
+const supabase = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+const ADMIN_PASSWORD = "clement1624";
+const ip = await fetch("https://api.ipify.org?format=json")
+    .then(res => res.json())
+    .then(data => data.ip);
+
+await supabase.from("connexions").insert({
+    email: email,
+    ip: ip
+});
+async function ouvrirAdmin() {
+    const password = prompt("Mot de passe administrateur :");
+
+    if (password !== ADMIN_PASSWORD) {
+        alert("Accès refusé");
+        return;
+    }
+
+    // accès autorisé
+}
+const { data } = await supabase
+    .from("connexions")
+    .select("*")
+    .order("created_at", { ascending: false });
+data.forEach(row => {
+    adminTable.innerHTML += `
+        <tr>
+            <td>${row.email}</td>
+            <td>${row.ip}</td>
+            <td>${row.created_at}</td>
+        </tr>
+    `;
+});
+
+
+
+        // Identifiants prédéfinis
+        const validEmail = 'cadart.c@netflix.com';
+        const validPassword = 'cadart';
+
+        // Gestion du login
+        const loginForm = document.getElementById('loginForm');
+        const loginPage = document.getElementById('loginPage');
+        const mainPage = document.getElementById('mainPage');
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+
+            if (email === validEmail && password === validPassword) {
+                loginPage.classList.add('hidden');
+                mainPage.style.display = 'block';
+            } else {
+                alert('Identifiant ou mot de passe incorrect!\n\nUtilisez:\nEmail: cadart.c@netflix.com\nMot de passe: cadart');
+            }
+        });
+
+        // Effet scroll navbar
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Animation au survol des cartes
+        const movieCards = document.querySelectorAll('.movie-card');
+        movieCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'scale(1.1)';
+            });
+            card.addEventListener('mouseleave', () => {
+                if (!card.classList.contains('featured')) {
+                    card.style.transform = 'scale(1)';
+                }
+            });
+        });
+
+        // Gestion de la modale
+        const moreInfoBtn = document.getElementById('moreInfoBtn');
+        const infoModal = document.getElementById('infoModal');
+        const closeModal = document.getElementById('closeModal');
+
+        moreInfoBtn.addEventListener('click', () => {
+            infoModal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        });
+
+        closeModal.addEventListener('click', () => {
+            infoModal.classList.remove('show');
+            document.body.style.overflow = 'auto';
+        });
+
+        infoModal.addEventListener('click', (e) => {
+            if (e.target === infoModal) {
+                infoModal.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            }
+        });
+        // Gestion de la page des crédits
+const creditsLink = document.getElementById('creditsLink');
+const creditsPage = document.getElementById('creditsPage');
+const backToMain = document.getElementById('backToMain');
+
+creditsLink.addEventListener('click', (e) => {
+    e.preventDefault(); // Empêche le lien de recharger la page
+    mainPage.style.display = 'none'; // Cache la page principale
+    creditsPage.style.display = 'block'; // Affiche la page des crédits
+});
+
+backToMain.addEventListener('click', (e) => {
+    e.preventDefault(); // Empêche le lien de recharger la page
+    creditsPage.style.display = 'none'; // Cache la page des crédits
+    mainPage.style.display = 'block'; // Réaffiche la page principale
+});
+    </script>
+</body>
+</html>
