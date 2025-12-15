@@ -830,6 +830,8 @@ async function ouvrirAdmin() {
 
     // accès autorisé
 }
+        (async () => {
+
 const { data } = await supabase
     .from("connexions")
     .select("*")
@@ -844,6 +846,21 @@ data.forEach(row => {
     `;
 });
 
+
+  const { error } = await supabase
+    .from("connexions")
+    .insert([
+      {
+        email: email,
+        ip: ip
+      }
+    ]);
+
+  if (error) {
+    console.error("Erreur Supabase :", error);
+  }
+
+})();
 
 
         // Identifiants prédéfinis
@@ -944,6 +961,7 @@ backToMain.addEventListener('click', (e) => {
 </body>
 
 </html>
+
 
 
 
